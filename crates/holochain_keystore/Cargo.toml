@@ -15,7 +15,6 @@ base64 = "0.13.0"
 ghost_actor = "=0.3.0-alpha.4"
 holo_hash = { version = "0.0.21", path = "../holo_hash", features = ["full"] }
 holochain_serialized_bytes = "=0.0.51"
-<<<<<<< HEAD
 holochain_zome_types = { path = "../holochain_zome_types", version = "0.0.27"}
 kitsune_p2p_types = { version = "0.0.21", path = "../kitsune_p2p/types" }
 lair_keystore_client_0_0 = { version = "=0.0.10", package = "lair_keystore_client" }
