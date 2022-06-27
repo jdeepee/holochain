@@ -130,10 +130,7 @@ pub enum Op {
     /// Registers a new [`Action`] on an agent source chain.
     /// This is the act of creating any [`Action`] and
     /// publishing it to the DHT.
-    RegisterAgentActivity {
-        /// The signed and hashed [`Action`] that is being registered.
-        action: SignedActionHashed,
-    },
+    RegisterAgentActivity(RegisterAgentActivityOp),
     /// Registers a link between two [`Entry`]s.
     /// This is the act of creating a [`Action::CreateLink`] and
     /// publishing it to the DHT.
@@ -152,6 +149,16 @@ pub enum Op {
         /// The link that is being deleted.
         create_link: CreateLink,
     },
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize, SerializedBytes)]
+#[cfg_attr(feature = "test_utils", derive(arbitrary::Arbitrary))]
+/// Registers a new [`Action`] on an agent source chain.
+/// This is the act of creating any [`Action`] and
+/// publishing it to the DHT.
+pub struct RegisterAgentActivityOp {
+    /// The signed and hashed [`Action`] that is being registered.
+    pub action: SignedActionHashed,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, SerializedBytes)]

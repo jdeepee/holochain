@@ -299,7 +299,7 @@ pub fn op_to_record(op: Op, activity_entry: Option<Entry>) -> Record {
         Op::RegisterDelete { delete, .. } => {
             Record::new(SignedActionHashed::raw_from_same_hash(delete), None)
         }
-        Op::RegisterAgentActivity { action } => Record::new(
+        Op::RegisterAgentActivity(RegisterAgentActivityOp { action }) => Record::new(
             SignedActionHashed::raw_from_same_hash(action),
             activity_entry,
         ),
@@ -327,12 +327,14 @@ async fn dhtop_to_op(op: DhtOp, cascade: &mut Cascade) -> AppValidationOutcome<O
             action: SignedHashed::new(action.into(), signature),
             entry: *entry,
         },
-        DhtOp::RegisterAgentActivity(signature, action) => Op::RegisterAgentActivity {
-            action: SignedActionHashed::with_presigned(
-                ActionHashed::from_content_sync(action),
-                signature,
-            ),
-        },
+        DhtOp::RegisterAgentActivity(signature, action) => {
+            Op::RegisterAgentActivity(RegisterAgentActivityOp {
+                action: SignedActionHashed::with_presigned(
+                    ActionHashed::from_content_sync(action),
+                    signature,
+                ),
+            })
+        }
         DhtOp::RegisterUpdatedContent(signature, update, entry)
         | DhtOp::RegisterUpdatedRecord(signature, update, entry) => {
             let new_entry = match entry {
@@ -435,7 +437,7 @@ where
     R: RibosomeT,
 {
     let zomes_to_invoke = match op {
-        Op::RegisterAgentActivity { .. } | Op::StoreRecord { .. } => ZomesToInvoke::AllIntegrity,
+        Op::RegisterAgentActivity(_) | Op::StoreRecord { .. } => ZomesToInvoke::AllIntegrity,
         Op::StoreEntry {
             action:
                 SignedHashed {

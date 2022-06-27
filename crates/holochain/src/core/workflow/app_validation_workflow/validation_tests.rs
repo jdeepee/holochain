@@ -7,7 +7,7 @@ use holo_hash::{ActionHash, AgentPubKey};
 use holochain_types::{dht_op::DhtOpType, inline_zome::InlineZomeSet};
 use holochain_zome_types::{
     Action, ActionType, AppEntryType, BoxApi, ChainTopOrdering, CreateInput, Entry, EntryDef,
-    EntryDefIndex, EntryVisibility, Op, TryInto, ZomeId,
+    EntryDefIndex, EntryVisibility, Op, RegisterAgentActivityOp, TryInto, ZomeId,
 };
 
 use crate::{
@@ -255,7 +255,7 @@ async fn app_validation_ops() {
                             with_entry_def_index,
                         }
                     }
-                    Op::RegisterAgentActivity { action } => Event {
+                    Op::RegisterAgentActivity(RegisterAgentActivityOp { action }) => Event {
                         action: ActionLocation::new(action.action().clone(), &agents),
                         op_type: DhtOpType::RegisterAgentActivity,
                         called_zome: zome,
